@@ -27,18 +27,20 @@ public class KubernetesSecretsVaultProvider implements VaultProvider{
     }
 
     public VaultRawSecret obtainSecret(String key) {
+        String[] parsedKey = key.split("__");
+
         try {
             ApiClient client = ClientBuilder.cluster().build();
             Configuration.setDefaultApiClient(client);
             CoreV1Api api = new CoreV1Api();
 
-            String secretName = realm + "--keycloakvault";
+            String secretName = parsedKey[0];
             String namespace = Namespaces.getPodNamespace();
 
             LOGGER.debug("Fetching secret {} in namespace {}", secretName, namespace);
             V1Secret secret = api.readNamespacedSecret(secretName, namespace, null, null, null);
 
-            return DefaultVaultRawSecret.forBuffer(Optional.of(ByteBuffer.wrap(secret.getData().get(key))));
+            return DefaultVaultRawSecret.forBuffer(Optional.of(ByteBuffer.wrap(secret.getData().get(parsedKey[1]))));
 
         } catch (IOException | ApiException e){
             LOGGER.error("Error connecting to Kube API", e);
