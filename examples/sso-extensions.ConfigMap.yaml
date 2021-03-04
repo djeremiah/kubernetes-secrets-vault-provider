@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: openshift-gitops
+  name: sso-extensions
+data:
+  sso-extensions.cli: |
+    batch
+    /subsystem=keycloak-server/spi=vault:add(default-provider="kubernetes-secrets")
+    /subsystem=keycloak-server/spi=vault/provider=kubernetes-secrets:add(enabled=true)
+    run-batch
+    

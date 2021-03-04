@@ -1,0 +1,22 @@
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
+metadata:
+  namespace: openshift-gitops
+  name: sso
+  labels:
+    app: sso
+spec:
+  externalAccess:
+    enabled: true
+  instances: 1
+  extensions:
+  - https://github.com/djeremiah/kubernetes-secrets-vault-provider/releases/download/v0.2/kubernetes-secrets-vault-provider-9.0.11.jar
+  keycloakDeploymentSpec:
+    experimental:
+      volumes:
+        defaultMode: 0777
+        items:
+        - configMap:
+            name: sso-extensions
+            mountPath: /opt/eap/extensions
+
