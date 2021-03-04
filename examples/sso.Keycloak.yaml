@@ -1,7 +1,6 @@
 apiVersion: keycloak.org/v1alpha1
 kind: Keycloak
 metadata:
-  namespace: openshift-gitops
   name: sso
   labels:
     app: sso
